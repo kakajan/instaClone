@@ -1,8 +1,11 @@
 {
-	"folders": [
-		{
-			"path": "BE"
-		}
-	],
-	"settings": {}
+  "folders": [
+    {
+      "path": "BE"
+    },
+    {
+      "path": "FE"
+    }
+  ],
+  "settings": {}
 }
