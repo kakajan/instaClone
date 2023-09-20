@@ -1,6 +1,6 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
+    <q-header class="bg-purple-8">
       <q-toolbar>
         <q-btn
           flat
@@ -12,10 +12,10 @@
         />
 
         <q-toolbar-title>
-          Quasar App
+          InstaClone
         </q-toolbar-title>
 
-        <div>Quasar v{{ $q.version }}</div>
+        <div>Insta V0.1</div>
       </q-toolbar>
     </q-header>
 
