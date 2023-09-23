@@ -23,5 +23,9 @@ Route::post('register', function (Request $request) {
     $user->email = $request->email;
     $user->password = $request->password;
     $user->save();
-    return $user;
+    if ($user) {
+        return response()->json(['status'=>true, 'user'=>$user]);
+    } else {
+        return response()->json(['status'=>false]);
+    }
 });

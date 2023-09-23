@@ -45,10 +45,12 @@
 <script>
 import { api } from "src/boot/axios";
 import { defineComponent, ref } from "vue";
+import { useRouter } from "vue-router";
 
 export default defineComponent({
   name: "IndexPage",
-  setup() {
+  setup () {
+    const router = useRouter();
     const username = ref("");
     const password = ref("");
     const confirmPassword = ref("");
@@ -62,6 +64,11 @@ export default defineComponent({
             })
             .then((r) => {
               console.log(r.data);
+              if (r.data.status) {
+                router.push('/login')
+              } else {
+                alert('مشکلی پیش اومده. میشه لطفا بعد تست کنی؟')
+              }
             });
         } else {
           alert("password not match");
