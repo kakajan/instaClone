@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PostController;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -24,8 +25,9 @@ Route::post('register', function (Request $request) {
     $user->password = $request->password;
     $user->save();
     if ($user) {
-        return response()->json(['status'=>true, 'user'=>$user]);
+        return response()->json(['status' => true, 'user' => $user]);
     } else {
-        return response()->json(['status'=>false]);
+        return response()->json(['status' => false]);
     }
 });
+Route::middleware('auth:api')->apiResource('posts', PostController::class);

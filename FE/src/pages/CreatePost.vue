@@ -44,6 +44,7 @@ export default {
     }
     return {
       ...toRefs(props),
+      createPost
     };
   },
 };
