@@ -49,6 +49,7 @@
 import { ref } from "vue";
 import { useQuasar } from "quasar";
 import { api } from "src/boot/axios";
+import { useRouter } from 'vue-router';
 
 export default {
   // name: 'PageName',
@@ -60,6 +61,7 @@ export default {
     const passwordRef = ref();
     const clientSecret = ref("gd9D3h8j2o2MYspgYHPPDIWjywO7yUkJYxwNnq41");
     const clientId = ref(2);
+    const router = useRouter()
     function login() {
       usernameRef.value.validate();
       passwordRef.value.validate();
@@ -80,10 +82,11 @@ export default {
           .then(r => {
             console.log(r.data);
             if (r.data.access_token) {
-              q.cookies.set('access_token',r.data.access_token)
-              q.cookies.set('refresh_token',r.data.refresh_token)
-              q.cookies.set('expires_in',r.data.expires_in)
+              q.cookies.set('access_token',r.data.access_token,{expires: '365d'})
+              q.cookies.set('refresh_token',r.data.refresh_token, {expires: '365d'})
+              q.cookies.set('expires_in',r.data.expires_in, {expires: '365d'})
             }
+            router.push('/')
           });
       }
     }
