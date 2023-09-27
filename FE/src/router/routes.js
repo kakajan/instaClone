@@ -7,7 +7,7 @@ const routes = [
         path: "",
         component: () => import("src/pages/DashboardPage.vue"),
         meta: {
-          requireAuth: true
+          requireAuth: true,
         },
       },
     ],
@@ -37,6 +37,27 @@ const routes = [
           requireAuth: false,
           login: true,
         },
+      },
+    ],
+  },
+  {
+    path: "/posts",
+    component: () => import("layouts/MainLayout.vue"),
+    meta: {
+      requireAuth: true
+    },
+    children: [
+      {
+        path: "",
+        component: () => import("src/pages/AllPosts.vue")
+      },
+      {
+        path: "create",
+        component: () => import("src/pages/CreatePost.vue")
+      },
+      {
+        path: "edit",
+        component: () => import("src/pages/EditPost.vue")
       },
     ],
   },

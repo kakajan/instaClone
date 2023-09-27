@@ -34,19 +34,46 @@ export default route(function (/* { store, ssrContext } */) {
     history: createHistory(process.env.VUE_ROUTER_BASE),
   });
   Router.beforeEach((to, from, next) => {
+    let access_token_exist = false;
     if (Cookies.get("access_token")) {
+      access_token_exist = true;
       api.defaults.headers = {
         Authorization: "Bearer " + Cookies.get("access_token"),
         "Content-Type": "application/json",
         Accept: "application/json;charset=UTF-8",
       };
-      next()
+    }
+    if (to.matched.some((record) => record.meta.requireAuth)) {
+      if (access_token_exist) {
+        console.log(11111);
+        next();
+      } else {
+        console.log(22222);
+        next({
+          path: "/login",
+          query: { redirect: to.fullPath },
+        });
+      }
+    } else {
+      if (
+        to.matched.some((record) => record.meta.login) ||
+        to.matched.some((record) => record.meta.register)
+      ) {
+        if (access_token_exist) {
+          next({
+            path: "/",
+            query: { redirect: to.fullPath },
+          });
+        } else {
+          console.log(33333);
+          next()
+        }
+      } else {
+        console.log(6666);
+        next();
+      }
     }
   });
-if (
-  !to.matched.some((record) => record.meta.intro))
-{
-  
-  }
+
   return Router;
 });
