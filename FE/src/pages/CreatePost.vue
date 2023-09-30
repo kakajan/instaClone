@@ -15,6 +15,8 @@
         label="Create"
         icon-right="send"
         outline
+        :loading="loading"
+        :disable="loading"
         rounded
         class="full-width"
         size="lg"
@@ -25,26 +27,44 @@
 
 <script>
 import { reactive, toRefs } from "vue";
-import { api } from 'src/boot/axios';
+import { api } from "src/boot/axios";
+import { useQuasar } from "quasar";
+import { useRouter } from 'vue-router';
 export default {
   // name: 'PageName',
   setup() {
+    const q = useQuasar();
+    const router = useRouter()
     const props = reactive({
       title: null,
       caption: null,
+      loading: false,
     });
-    function createPost () {
-      api.post('api/posts', {
-        title: props.title,
-        caption: props.caption
-      })
-        .then(r => {
-        console.log(r.data);
-      })
+    function createPost() {
+      props.loading = true;
+      api
+        .post("api/posts", {
+          title: props.title,
+          caption: props.caption,
+        })
+        .then((r) => {
+          props.loading = false;
+          q.notify({
+            color: "light-blue-6",
+            position: "top",
+            message: "Post added successfully!",
+            icon: "done_all",
+          });
+          router.push('/')
+        })
+        .catch((e) => {
+          props.loading = false;
+          console.log(e);
+        });
     }
     return {
       ...toRefs(props),
-      createPost
+      createPost,
     };
   },
 };
