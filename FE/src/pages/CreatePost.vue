@@ -49,13 +49,21 @@ export default {
         })
         .then((r) => {
           props.loading = false;
-          q.notify({
-            color: "light-blue-6",
-            position: "top",
-            message: "Post added successfully!",
-            icon: "done_all",
-          });
-          router.push('/')
+          if (r.data.status) {
+            q.notify({
+              color: "light-blue-6",
+              position: "top",
+              message: "Post added successfully!",
+              icon: "done_all",
+            });
+            router.push('/')
+          } else {
+            q.notify({
+              color: "orange-6",
+              position: "top",
+              message: "Error!",
+            });
+          }
         })
         .catch((e) => {
           props.loading = false;
