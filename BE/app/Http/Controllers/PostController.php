@@ -26,9 +26,9 @@ class PostController extends Controller
         $post->caption = $request->caption;
         $post->save();
         if ($post) {
-            return response()->json(['status'=>true], 201);
+            return response()->json(['status' => true], 201);
         } else {
-            return response()->json(['status'=>false], 204);
+            return response()->json(['status' => false], 204);
         }
     }
 
@@ -51,8 +51,13 @@ class PostController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Post $post)
+    public function destroy(Request $request, Post $post)
     {
-        //
+        if ($request->user()->id == $post->user_id) {
+            $post->delete();
+            return ['status'=>true];
+        } else {
+            return 'Hacking Attempt';
+        }
     }
 }

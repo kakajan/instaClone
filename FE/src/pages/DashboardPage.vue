@@ -59,7 +59,12 @@
                           <q-separator />
                           <q-item clickable>
                             <q-item-section>
-                              <q-icon size="25px" color="pink-6" name="delete" />
+                              <q-icon
+                                size="25px"
+                                @click="showConfirmation(post.id, index)"
+                                color="pink-6"
+                                name="delete"
+                              />
                             </q-item-section>
                           </q-item>
                         </q-list>
@@ -91,6 +96,20 @@
         </q-tab-panels>
       </div>
     </div>
+    <q-dialog v-model="taeed" persistent>
+      <q-card>
+        <q-card-section class="row items-center">
+          <span class="q-ml-sm">
+            R U Shure to delete the Post Titled "{{ selectedPost.title }}"?
+          </span>
+        </q-card-section>
+
+        <q-card-actions align="right">
+          <q-btn flat label="yes" @click="deletePost" color="pink-6" />
+          <q-btn flat label="no" color="grey-7" v-close-popup />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </q-page>
 </template>
 
@@ -107,10 +126,26 @@ export default {
     const descriptionRef = ref("");
     const tab = ref("posts");
     const posts = ref([]);
+    const taeed = ref(false);
+    const selectedPost = ref(null);
+    const selectedPostIndex = ref(null);
+    function deletePost() {
+      api.delete("api/posts/" + selectedPost.value.id).then((r) => {
+        if (r.data.status) {
+          posts.value.splice(selectedPostIndex.value, 1)
+          taeed.value = false
+        }
+      });
+    }
     function fetchPost() {
       api.get("api/posts").then((r) => {
         posts.value = r.data;
       });
+    }
+    function showConfirmation(id, index) {
+      selectedPost.value = posts.value[index];
+      selectedPostIndex.value = index
+      taeed.value = true;
     }
     onMounted(() => {
       fetchPost();
@@ -124,6 +159,11 @@ export default {
       description,
       descriptionRef,
       fetchPost,
+      showConfirmation,
+      taeed,
+      selectedPost,
+      deletePost,
+      selectedPostIndex
     };
   },
 };
