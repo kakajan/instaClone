@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\LikeController;
 use App\Http\Controllers\PostController;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -32,3 +33,5 @@ Route::post('register', function (Request $request) {
 });
 Route::middleware('auth:api')->apiResource('posts', PostController::class);
 Route::middleware('auth:api')->get('public/posts', [PostController::class, 'public']);
+Route::middleware('auth:api')->apiResource('likes', LikeController::class);
+Route::middleware('auth:api')->post('likes/{postID}', [LikeController::class,'setLike']);

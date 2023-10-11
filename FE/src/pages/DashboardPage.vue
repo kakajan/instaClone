@@ -73,7 +73,7 @@
                         </q-list>
                       </q-menu>
                     </q-btn>
-                    <q-btn class="" flat color="grey-7" icon="favorite_outline" />
+                    <q-btn @click="likeToggle(post.id, index)" class="" flat :color="post.liked?'red':'grey-7'" :icon="post.liked?'favorite':'favorite_outline'" />
                   </q-card-actions>
                 </q-card>
               </div>
@@ -128,7 +128,6 @@
                         </q-list>
                       </q-menu>
                     </q-btn>
-                    <q-btn class="" flat color="pink-7" icon="visibility" />
                   </q-card-actions>
                 </q-card>
               </div>
@@ -182,7 +181,7 @@ export default {
     const file = ref();
     const description = ref("");
     const descriptionRef = ref("");
-    const tab = ref("posts");
+    const tab = ref("discover");
     const posts = ref([]);
     const AllPosts = ref([]);
     const taeed = ref(false);
@@ -222,11 +221,18 @@ export default {
           userData.value = r.data
       })
     }
+    function likeToggle (postId, index) {
+      api.post('api/likes/' + postId)
+        .then(r => {
+        AllPosts.value[index].liked = r.data.liked
+      })
+    }
     onMounted(() => {
       fetchPost();
       fetchUser();
     });
     return {
+      likeToggle,
       posts,
       tab,
       title,
