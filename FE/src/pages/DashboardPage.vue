@@ -2,11 +2,13 @@
   <q-page padding>
     <!-- content -->
     <div class="row justify-center">
-      <div class="col-auto text-center">
+      <div  class="col-auto text-center">
         <q-avatar size="80px">
-          <q-img src="/avatar.webp" />
+          <q-img v-if="userData" src="/avatar.webp" />
+          <q-skeleton v-else type="circle" />
         </q-avatar>
-        <h4 class="text-h6 q-ma-none">Usher</h4>
+        <h4 v-if="userData" class="text-h6 q-ma-none">{{ userData.profile.full_name }}</h4>
+        <q-skeleton v-else type="text" />
       </div>
     </div>
     <div class="row">
@@ -186,6 +188,7 @@ export default {
     const taeed = ref(false);
     const selectedPost = ref(null);
     const selectedPostIndex = ref(null);
+    const userData = ref(null)
     function deletePost() {
       api.delete("api/posts/" + selectedPost.value.id).then((r) => {
         if (r.data.status) {
@@ -213,8 +216,15 @@ export default {
       selectedPostIndex.value = index
       taeed.value = true;
     }
+    function fetchUser() {
+      api.get('api/user')
+        .then(r => {
+          userData.value = r.data
+      })
+    }
     onMounted(() => {
       fetchPost();
+      fetchUser();
     });
     return {
       posts,
@@ -232,7 +242,9 @@ export default {
       selectedPostIndex,
       editPost,
       fetchAllPost,
-      AllPosts
+      AllPosts,
+      fetchUser,
+      userData
     };
   },
 };
