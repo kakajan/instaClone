@@ -10,6 +10,10 @@ class PostController extends Controller
     /**
      * Display a listing of the resource.
      */
+    public function public(Request $request)
+    {
+        return Post::where('user_id', '!=', $request->user()->id)->get();
+    }
     public function index(Request $request)
     {
         return $request->user()->posts;
@@ -37,7 +41,7 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        //
+        return $post;
     }
 
     /**
@@ -45,7 +49,15 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
-        //
+        if ($request->user()->id == $post->user_id) {
+            $post->title = $request->title;
+            $post->caption = $request->caption;
+            $post->save();
+            return ['status' => true];
+        } else {
+            return 'editing is denied for you';
+        }
+
     }
 
     /**
@@ -55,7 +67,7 @@ class PostController extends Controller
     {
         if ($request->user()->id == $post->user_id) {
             $post->delete();
-            return ['status'=>true];
+            return ['status' => true];
         } else {
             return 'Hacking Attempt';
         }

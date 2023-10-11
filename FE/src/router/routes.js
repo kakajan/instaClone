@@ -56,7 +56,7 @@ const routes = [
         component: () => import("src/pages/CreatePost.vue")
       },
       {
-        path: "edit",
+        path: "edit/:id",
         component: () => import("src/pages/EditPost.vue")
       },
     ],

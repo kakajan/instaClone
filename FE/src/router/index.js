@@ -45,10 +45,10 @@ export default route(function (/* { store, ssrContext } */) {
     }
     if (to.matched.some((record) => record.meta.requireAuth)) {
       if (access_token_exist) {
-        console.log(11111);
+        // console.log(11111);
         next();
       } else {
-        console.log(22222);
+        // console.log(22222);
         next({
           path: "/login",
           query: { redirect: to.fullPath },

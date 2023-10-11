@@ -31,3 +31,4 @@ Route::post('register', function (Request $request) {
     }
 });
 Route::middleware('auth:api')->apiResource('posts', PostController::class);
+Route::middleware('auth:api')->get('public/posts', [PostController::class, 'public']);

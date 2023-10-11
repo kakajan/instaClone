@@ -20,6 +20,7 @@
           align="justify"
           narrow-indicator
         >
+          <q-tab name="discover" label="Discover" />
           <q-tab name="posts" label="Posts" />
           <q-tab name="followers" label="Followers" />
           <q-tab name="followings" label="Followings" />
@@ -28,6 +29,61 @@
         <q-separator />
 
         <q-tab-panels v-model="tab" animated>
+          <q-tab-panel name="discover" class="q-gutter-y-md">
+            <div class="text-h6">Friends Posts</div>
+            <div
+              v-if="AllPosts.length < 1"
+              class="text-grey-8 text-h6 text-center"
+            >
+              You dont have any posts!
+            </div>
+            <div v-else class="row q-col-gutter-sm">
+              <div
+                class="col-6"
+                v-for="(post, index) in AllPosts"
+                :key="'post' + index + 1"
+              >
+                <q-card>
+                  <q-card-section>
+                    <h6 class="q-ma-none">{{ post.title }}</h6>
+                    <p>{{ post.caption }}</p>
+                  </q-card-section>
+                  <q-card-actions align="around">
+                    <q-btn class="" flat color="grey-8" icon="more_horiz">
+                      <q-menu fit>
+                        <q-list>
+                          <q-item clickable>
+                            <q-item-section>
+                              <q-icon size="25px" @click="$router.push(`/posts/edit/${post.id}`)" name="edit" />
+                            </q-item-section>
+                          </q-item>
+                          <q-separator />
+                          <q-item clickable>
+                            <q-item-section>
+                              <q-icon
+                                size="25px"
+                                @click="showConfirmation(post.id, index)"
+                                color="pink-6"
+                                name="delete"
+                              />
+                            </q-item-section>
+                          </q-item>
+                        </q-list>
+                      </q-menu>
+                    </q-btn>
+                    <q-btn class="" flat color="grey-7" icon="favorite_outline" />
+                  </q-card-actions>
+                </q-card>
+              </div>
+            </div>
+            <q-btn
+              label="create your first Post"
+              class="full-width"
+              outline
+              rounded
+              @click="$router.push('/posts/create')"
+            />
+          </q-tab-panel>
           <q-tab-panel name="posts" class="q-gutter-y-md">
             <div class="text-h6">Posts</div>
             <div
@@ -53,7 +109,7 @@
                         <q-list>
                           <q-item clickable>
                             <q-item-section>
-                              <q-icon size="25px" name="edit" />
+                              <q-icon size="25px" @click="$router.push(`/posts/edit/${post.id}`)" name="edit" />
                             </q-item-section>
                           </q-item>
                           <q-separator />
@@ -126,6 +182,7 @@ export default {
     const descriptionRef = ref("");
     const tab = ref("posts");
     const posts = ref([]);
+    const AllPosts = ref([]);
     const taeed = ref(false);
     const selectedPost = ref(null);
     const selectedPostIndex = ref(null);
@@ -141,6 +198,15 @@ export default {
       api.get("api/posts").then((r) => {
         posts.value = r.data;
       });
+    }
+    function fetchAllPost () {
+      api.get("api/public/posts").then((r) => {
+        AllPosts.value = r.data;
+      });
+    }
+    fetchAllPost()
+    function editPost () {
+
     }
     function showConfirmation(id, index) {
       selectedPost.value = posts.value[index];
@@ -163,7 +229,10 @@ export default {
       taeed,
       selectedPost,
       deletePost,
-      selectedPostIndex
+      selectedPostIndex,
+      editPost,
+      fetchAllPost,
+      AllPosts
     };
   },
 };
