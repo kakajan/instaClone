@@ -11,6 +11,6 @@ class Like extends Model
     use HasFactory;
     public function user(): BelongsToMany
     {
-        return $this->belongsToMany(Like::class, 'likes', 'user_id', 'post_id');
+        return $this->belongsToMany(Like::class, 'likes', 'post_id', 'user_id');
     }
 }

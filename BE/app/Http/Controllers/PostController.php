@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Like;
 use App\Models\Post;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
@@ -16,8 +18,10 @@ class PostController extends Controller
         foreach ($posts as $post) {
             $likes = $post->likes;
             $user =  $request->user();
-            if ($likes->count()>0){
+            if ($likes->count()>0) {
+                $list = [];
                 foreach ($likes as $like) {
+                    array_push($list, User::find($like->user_id)->email);
                     if($like->user_id == $user->id){
                         $post->liked = true;
                     } else {
@@ -25,6 +29,7 @@ class PostController extends Controller
                     }
                 }
             }
+            $post->usersLiked = $list;
         }
         return $posts;
     }
