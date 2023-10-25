@@ -17,11 +17,12 @@ class PostController extends Controller
         $posts = Post::where('user_id', '!=', $request->user()->id)->get();
         foreach ($posts as $post) {
             $likes = $post->likes;
+            $post->likeCount = $likes->count();
             $user =  $request->user();
             if ($likes->count()>0) {
                 $list = [];
                 foreach ($likes as $like) {
-                    array_push($list, User::find($like->user_id)->email);
+                    //array_push($list, $like->user->email);
                     if($like->user_id == $user->id){
                         $post->liked = true;
                     } else {
@@ -29,7 +30,7 @@ class PostController extends Controller
                     }
                 }
             }
-            $post->usersLiked = $list;
+            //$post->usersLiked = $list;
         }
         return $posts;
     }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Like;
 use App\Models\Post;
+use App\Library\SendSMS;
 use Illuminate\Http\Request;
 
 class LikeController extends Controller
@@ -30,6 +31,7 @@ class LikeController extends Controller
                     ]);
 
                 } else {
+
                     newLike($postId, $userId);
                     return response()->json([
                         'liked' => true,

@@ -13,6 +13,19 @@ const routes = [
     ],
   },
   {
+    path: "/test",
+    component: () => import("layouts/MainLayout.vue"),
+    children: [
+      {
+        path: "",
+        component: () => import("src/pages/testPage.vue"),
+        meta: {
+          requireAuth: true,
+        },
+      },
+    ],
+  },
+  {
     path: "/register",
     component: () => import("layouts/MainLayout.vue"),
     children: [
@@ -41,23 +54,37 @@ const routes = [
     ],
   },
   {
+    path: "/confirm/:mobile",
+    component: () => import("layouts/MainLayout.vue"),
+    children: [
+      {
+        path: "",
+        component: () => import("src/pages/ConfirmPage.vue"),
+        meta: {
+          requireAuth: false,
+          login: true,
+        },
+      },
+    ],
+  },
+  {
     path: "/posts",
     component: () => import("layouts/MainLayout.vue"),
     meta: {
-      requireAuth: true
+      requireAuth: true,
     },
     children: [
       {
         path: "",
-        component: () => import("src/pages/AllPosts.vue")
+        component: () => import("src/pages/AllPosts.vue"),
       },
       {
         path: "create",
-        component: () => import("src/pages/CreatePost.vue")
+        component: () => import("src/pages/CreatePost.vue"),
       },
       {
         path: "edit/:id",
-        component: () => import("src/pages/EditPost.vue")
+        component: () => import("src/pages/EditPost.vue"),
       },
     ],
   },

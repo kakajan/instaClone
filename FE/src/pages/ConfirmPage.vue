@@ -4,13 +4,11 @@
     <div class="row justify-center">
       <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6 q-gutter-y-md">
         <q-input
-          v-model="username"
+          v-model="password"
           rounded
           outlined
-          label="email"
           type="text"
           ref="usernameRef"
-          placeholder="somemail@gmail.com"
           autocomplete="off"
           :rules="[
             (val) => !!val || 'Field is required'
@@ -34,11 +32,12 @@
 import { ref } from "vue";
 import { useQuasar } from "quasar";
 import { api } from "src/boot/axios";
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
 export default {
   // name: 'PageName',
-  setup() {
+  setup () {
+    const route = useRoute()
     const q = useQuasar();
     const username = ref(null);
     const password = ref(null);
@@ -56,14 +55,21 @@ export default {
           message: "Please check your input!",
         });
       } else {
-        api.post("api/verify", {
+        api.post("oauth/token", {
           grant_type: "password",
           client_id: clientId.value,
           client_secret: clientSecret.value,
-          username: username.value,
+          username: route.params.mobile,
+          password: password.value,
         })
           .then(r => {
-            router.push('/confirm/'+username.value)
+            console.log(r.data);
+            if (r.data.access_token) {
+              q.cookies.set('access_token',r.data.access_token,{expires: '365d'})
+              q.cookies.set('refresh_token',r.data.refresh_token, {expires: '365d'})
+              q.cookies.set('expires_in',r.data.expires_in, {expires: '365d'})
+            }
+            router.push('/')
           });
       }
     }

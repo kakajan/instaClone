@@ -9,8 +9,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class Like extends Model
 {
     use HasFactory;
+    protected $table = 'post_user';
     public function user(): BelongsToMany
     {
-        return $this->belongsToMany(Like::class, 'likes', 'post_id', 'user_id');
+        return $this->belongsToMany(Like::class, 'post_user', 'user_id', 'post_id');
     }
 }
