@@ -11,11 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('post_user', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('post_id');
-            $table->unsignedBigInteger('user_id');
-            $table->timestamps();
+        Schema::table('posts', function (Blueprint $table) {
+            $table->string('cover',1000)->after('title')->nullable();
         });
     }
 
@@ -24,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('post_user');
+        Schema::table('posts', function (Blueprint $table) {
+            $table->dropColumn('cover');
+        });
     }
 };

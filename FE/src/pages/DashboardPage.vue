@@ -100,7 +100,8 @@
                 v-for="(post, index) in posts"
                 :key="'post' + index + 1"
               >
-                <q-card>
+                <q-card class="full-width">
+                  <q-img :src="'http://localhost:8000/storage/'+post.cover" />
                   <q-card-section>
                     <h6 class="q-ma-none">{{ post.title }}</h6>
                     <p>{{ post.caption }}</p>

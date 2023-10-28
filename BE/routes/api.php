@@ -6,6 +6,7 @@ use App\Mail\OrderShipped;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\PostController;
 
@@ -53,3 +54,6 @@ Route::get('test-mail',
  function () {
     Mail::to(User::find(13))->send(new OrderShipped());
  });
+Route::post('/upload', function(Request $request) {
+   return $path = $request->file('picture')->storeAs('postCovers','post1.png');
+});

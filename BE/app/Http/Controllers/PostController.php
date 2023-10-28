@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Like;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -18,12 +17,12 @@ class PostController extends Controller
         foreach ($posts as $post) {
             $likes = $post->likes;
             $post->likeCount = $likes->count();
-            $user =  $request->user();
-            if ($likes->count()>0) {
+            $user = $request->user();
+            if ($likes->count() > 0) {
                 $list = [];
                 foreach ($likes as $like) {
                     //array_push($list, $like->user->email);
-                    if($like->user_id == $user->id){
+                    if ($like->user_id == $user->id) {
                         $post->liked = true;
                     } else {
                         $post->liked = false;
@@ -48,6 +47,9 @@ class PostController extends Controller
         $post->title = $request->title;
         $post->user_id = $request->user()->id;
         $post->caption = $request->caption;
+        $post->save();
+        $path = $request->file('picture')->storeAs('postCovers',  $post->id.'.jpg');
+        $post->cover = $path;
         $post->save();
         if ($post) {
             return response()->json(['status' => true], 201);
