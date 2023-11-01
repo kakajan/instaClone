@@ -7,10 +7,10 @@
           v-model="username"
           rounded
           outlined
-          label="email"
+          label="mobile"
           type="text"
           ref="usernameRef"
-          placeholder="somemail@gmail.com"
+          placeholder="9112746075"
           autocomplete="off"
           :rules="[
             (val) => !!val || 'Field is required'
@@ -35,10 +35,12 @@ import { ref } from "vue";
 import { useQuasar } from "quasar";
 import { api } from "src/boot/axios";
 import { useRouter } from 'vue-router';
+import { useAppDataStore } from "src/stores/appData";
 
 export default {
   // name: 'PageName',
-  setup() {
+  setup () {
+    const appData = useAppDataStore();
     const q = useQuasar();
     const username = ref(null);
     const password = ref(null);
@@ -47,7 +49,8 @@ export default {
     const clientSecret = ref("gd9D3h8j2o2MYspgYHPPDIWjywO7yUkJYxwNnq41");
     const clientId = ref(2);
     const router = useRouter()
-    function login() {
+    function login () {
+      appData.mobile = username.value
       usernameRef.value.validate();
       if (usernameRef.value.hasError) {
         q.notify({
@@ -63,7 +66,7 @@ export default {
           username: username.value,
         })
           .then(r => {
-            router.push('/confirm/'+username.value)
+            router.push('/confirm')
           });
       }
     }
