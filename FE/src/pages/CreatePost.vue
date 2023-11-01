@@ -29,6 +29,7 @@
           outlined
           v-model="caption"
         />
+        <div>{{ captionLimitMessage }}</div>
         <q-btn
           type="submit"
           label="Create"
@@ -45,7 +46,7 @@
 </template>
 
 <script>
-import { reactive, ref, toRefs } from "vue";
+import { computed, reactive, ref, toRefs } from "vue";
 import { api } from "src/boot/axios";
 import { useQuasar } from "quasar";
 import { useRouter } from "vue-router";
@@ -54,9 +55,9 @@ export default {
   setup() {
     const q = useQuasar();
     const router = useRouter();
+    const caption = ref('');
     const props = reactive({
       title: null,
-      caption: null,
       loading: false,
       file: null,
     });
@@ -101,6 +102,10 @@ export default {
       ...toRefs(props),
       createPost,
       handleFile,
+      caption,
+      captionLimitMessage: computed(() => {
+        return caption.value.length> 50 ? 'کمترش کن':'هنوز جا داری'
+      })
     };
   },
 };

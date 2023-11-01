@@ -29,15 +29,17 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { useQuasar } from "quasar";
 import { api } from "src/boot/axios";
 import { useRoute, useRouter } from 'vue-router';
+import { useAppDataStore } from 'src/stores/appData';
 
 export default {
   // name: 'PageName',
   setup () {
-    const route = useRoute()
+    const appData = useAppDataStore();
+    const route = useRoute();
     const q = useQuasar();
     const username = ref(null);
     const password = ref(null);
@@ -59,7 +61,7 @@ export default {
           grant_type: "password",
           client_id: clientId.value,
           client_secret: clientSecret.value,
-          username: route.params.mobile,
+          username: appData.mobile,
           password: password.value,
         })
           .then(r => {
@@ -73,6 +75,9 @@ export default {
           });
       }
     }
+    onMounted(() => {
+      console.log(appData.mobile);
+    })
     return {
       username,
       usernameRef,

@@ -4,7 +4,7 @@
     <div class="row justify-center">
       <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6 q-gutter-y-md">
         <q-input
-          v-model="username"
+          v-model="mobile"
           rounded
           outlined
           label="mobile"
@@ -36,13 +36,14 @@ import { useQuasar } from "quasar";
 import { api } from "src/boot/axios";
 import { useRouter } from 'vue-router';
 import { useAppDataStore } from "src/stores/appData";
+import { storeToRefs } from 'pinia';
 
 export default {
   // name: 'PageName',
   setup () {
     const appData = useAppDataStore();
+    const { mobile } = storeToRefs(appData)
     const q = useQuasar();
-    const username = ref(null);
     const password = ref(null);
     const usernameRef = ref();
     const passwordRef = ref();
@@ -50,7 +51,6 @@ export default {
     const clientId = ref(2);
     const router = useRouter()
     function login () {
-      appData.mobile = username.value
       usernameRef.value.validate();
       if (usernameRef.value.hasError) {
         q.notify({
@@ -63,7 +63,7 @@ export default {
           grant_type: "password",
           client_id: clientId.value,
           client_secret: clientSecret.value,
-          username: username.value,
+          username: mobile.value,
         })
           .then(r => {
             router.push('/confirm')
@@ -71,7 +71,7 @@ export default {
       }
     }
     return {
-      username,
+      mobile,
       usernameRef,
       password,
       passwordRef,
