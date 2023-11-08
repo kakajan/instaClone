@@ -1,7 +1,7 @@
 <template>
   <q-page padding>
     <!-- content -->
-    <div class="row justify-center">
+    <!-- <div class="row justify-center">
       <div  class="col-auto text-center">
         <q-avatar size="80px">
           <q-img v-if="userData" src="/avatar.webp" />
@@ -10,7 +10,7 @@
         <h4 v-if="userData" class="text-h6 q-ma-none">{{ userData.profile.full_name }}</h4>
         <q-skeleton v-else type="text" />
       </div>
-    </div>
+    </div> -->
     <div class="row">
       <div class="col-12">
         <q-tabs
@@ -168,14 +168,23 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
+    <q-input v-model="username" />
+    {{ username }}
+    <q-input v-model="counter" />
+    <counter-button @sumed="updateCounter" :counter="15" />
+    {{ counter }}
   </q-page>
 </template>
 
 <script>
 import { onMounted, ref } from "vue";
 import { api } from "src/boot/axios";
+import CounterButton from "src/components/CounterButton.vue";
 export default {
   // name: 'PageName',
+  components: {
+    CounterButton
+  },
   setup() {
     const title = ref("");
     const titleRef = ref("");
@@ -184,6 +193,8 @@ export default {
     const descriptionRef = ref("");
     const tab = ref("discover");
     const posts = ref([]);
+    const counter = ref(0);
+    const username = ref(null);
     const AllPosts = ref([]);
     const taeed = ref(false);
     const selectedPost = ref(null);
@@ -196,6 +207,11 @@ export default {
           taeed.value = false
         }
       });
+    }
+    function updateCounter (val) {
+      counter.value = val
+      console.log(val);
+      console.log(counter.value);
     }
     function fetchPost() {
       api.get("api/posts").then((r) => {
@@ -239,10 +255,13 @@ export default {
       title,
       titleRef,
       file,
+      counter,
+      username,
       description,
       descriptionRef,
       fetchPost,
       showConfirmation,
+      updateCounter,
       taeed,
       selectedPost,
       deletePost,
