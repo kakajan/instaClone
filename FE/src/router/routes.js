@@ -7,10 +7,10 @@ const routes = [
         path: "",
         component: () => import("src/pages/DashboardPage.vue"),
         meta: {
-          requireAuth: true,
-        },
-      },
-    ],
+          requireAuth: true
+        }
+      }
+    ]
   },
   {
     path: "/test",
@@ -20,10 +20,10 @@ const routes = [
         path: "",
         component: () => import("src/pages/testPage.vue"),
         meta: {
-          requireAuth: true,
-        },
-      },
-    ],
+          requireAuth: true
+        }
+      }
+    ]
   },
   {
     path: "/register",
@@ -34,10 +34,10 @@ const routes = [
         component: () => import("src/pages/RegisterPage.vue"),
         meta: {
           requireAuth: false,
-          register: true,
-        },
-      },
-    ],
+          register: true
+        }
+      }
+    ]
   },
   {
     path: "/login",
@@ -48,10 +48,10 @@ const routes = [
         component: () => import("src/pages/LoginPage.vue"),
         meta: {
           requireAuth: false,
-          login: true,
-        },
-      },
-    ],
+          login: true
+        }
+      }
+    ]
   },
   {
     path: "/confirm",
@@ -62,39 +62,52 @@ const routes = [
         component: () => import("src/pages/ConfirmPage.vue"),
         meta: {
           requireAuth: false,
-          login: true,
-        },
-      },
-    ],
+          login: true
+        }
+      }
+    ]
   },
   {
     path: "/posts",
     component: () => import("layouts/MainLayout.vue"),
     meta: {
-      requireAuth: true,
+      requireAuth: true
     },
     children: [
       {
         path: "",
-        component: () => import("src/pages/AllPosts.vue"),
+        component: () => import("src/pages/AllPosts.vue")
       },
       {
         path: "create",
-        component: () => import("src/pages/CreatePost.vue"),
+        component: () => import("src/pages/CreatePost.vue")
       },
       {
         path: "edit/:id",
-        component: () => import("src/pages/EditPost.vue"),
-      },
-    ],
+        component: () => import("src/pages/EditPost.vue")
+      }
+    ]
+  },
+  {
+    path: "/profile",
+    component: () => import("layouts/MainLayout.vue"),
+    meta: {
+      requireAuth: true
+    },
+    children: [
+      {
+        path: "",
+        component: () => import("src/pages/ProfilePage.vue")
+      }
+    ]
   },
 
   // Always leave this as last one,
   // but you can also remove it
   {
     path: "/:catchAll(.*)*",
-    component: () => import("pages/ErrorNotFound.vue"),
-  },
+    component: () => import("pages/ErrorNotFound.vue")
+  }
 ];
 
 export default routes;

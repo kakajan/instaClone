@@ -2,62 +2,71 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ProfileUpdateRequest;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Http\RedirectResponse;
+use App\Models\Image;
+use App\Models\Profile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
-use Inertia\Inertia;
-use Inertia\Response;
 
 class ProfileController extends Controller
 {
     /**
-     * Display the user's profile form.
+     * Display a listing of the resource.
      */
-    public function edit(Request $request): Response
+    public function index(Request $request)
     {
-        return Inertia::render('Profile/Edit', [
-            'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
-            'status' => session('status'),
-        ]);
+        $profile = $request->user()->profile;
+        return $profile;
     }
 
     /**
-     * Update the user's profile information.
+     * Store a newly created resource in storage.
      */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
+    public function store(Request $request)
     {
-        $request->user()->fill($request->validated());
+        $profile = Profile::where('user_id', $request->user()->id);
+        $path = $request->file('picture')->storeAs('Images', $profile->id . '.jpg');
+        $profile->full_name = $request->full_name;
+        $profile->work_email = $request->work_email;
+        $profile->work_mobile = $request->work_mobile;
+        $profile->image->url = $path;
+        $profile->save();
+        return response()->json(['profile' => 'profile'], 200);
+        // $profile = Profile::where('user_id', $id)->get();
+        // $profile->image()->create([
+        //     'url' => $path
+        // ]);
+        // $profile->save();
+        // return response()->json(['profile' => $profile], 200);
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
-        }
-
-        $request->user()->save();
-
-        return Redirect::route('profile.edit');
     }
 
     /**
-     * Delete the user's account.
+     * Display the specified resource.
      */
-    public function destroy(Request $request): RedirectResponse
+    public function show(string $id)
     {
-        $request->validate([
-            'password' => ['required', 'current_password'],
-        ]);
+        //
+    }
 
-        $user = $request->user();
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, Profile $profile)
+    {
+        $path = $request->file('picture')->storeAs('Images', $profile->id . '.jpg');
+        $profile->full_name = $request->full_name;
+        $profile->work_email = $request->work_email;
+        $profile->work_mobile = $request->work_mobile;
+        $profile->save();
+        $image = $profile->image()->create(['url' => $path]);
+        return response()->json(['profile' => $profile, 'image' => $image], 200);
+    }
 
-        Auth::logout();
-
-        $user->delete();
-
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return Redirect::to('/');
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id)
+    {
+        //
     }
 }
