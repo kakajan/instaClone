@@ -35,10 +35,28 @@ Route::post('register', function (Request $request) {
         return response()->json(['status' => false]);
     }
 });
+Route::middleware('auth:api')->post('users/{id}/unfollow',function(Request $request, $id){
+    $user = $request->user();
+    $stat = $user->followings()->detach([$id]);
+    return response()->json(['status' => true]);
+
+
+});
+Route::middleware('auth:api')->post('users/{id}/follow',function(Request $request, $id){
+    $user = $request->user();
+    $stat = $user->followings()->attach([$id]);
+    return response()->json(['status' => true]);
+
+
+});
 Route::middleware('auth:api')->apiResource('posts', PostController::class);
 Route::middleware('auth:api')->get('public/posts', [PostController::class, 'public']);
 Route::middleware('auth:api')->apiResource('likes', LikeController::class);
 Route::middleware('auth:api')->post('likes/{postID}', [LikeController::class,'setLike']);
+Route::middleware('auth:api')->get('testFollowings', function(Request $request){
+    $user = $request->user();
+    return $user->followings;
+});
 Route::post(
     'verify',
     function (Request $request) {

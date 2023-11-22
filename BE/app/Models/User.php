@@ -73,4 +73,22 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Like::class, 'post_user', 'user_id', 'post_id');
     }
+    /**
+     * The followers that belong to the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function followers(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'user_user', 'following_id', 'user_id');
+    }
+    /**
+     * The followings that belong to the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function followings(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'user_user', 'user_id' , 'following_id');
+    }
 }

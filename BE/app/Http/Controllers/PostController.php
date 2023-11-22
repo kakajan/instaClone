@@ -61,8 +61,16 @@ class PostController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Post $post)
+    public function show(Request $request, Post $post)
     {
+        $user = $request->user();
+        $postUser = $post->user;
+        $res = $user->followings()->where('following_id', $postUser->id)->first();
+        if ($res) {
+            $post['user']['isFollowing'] = true;
+        } else {
+            $post['user']['isFollowing'] = false;
+        }
         return $post;
     }
 

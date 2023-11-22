@@ -45,7 +45,7 @@
                 v-for="(post, index) in AllPosts"
                 :key="'post' + index + 1"
               >
-                <q-card>
+                <q-card @click="goToPost(post.id,post)">
                   <q-card-section>
                     <h6 class="q-ma-none">{{ post.title }}</h6>
                     <p>{{ post.caption }}</p>
@@ -180,6 +180,9 @@
 import { onMounted, ref } from "vue";
 import { api } from "src/boot/axios";
 import CounterButton from "src/components/CounterButton.vue";
+import { useAppDataStore } from 'src/stores/appData';
+import router from 'src/router';
+import { useRouter } from 'vue-router';
 export default {
   // name: 'PageName',
   components: {
@@ -187,8 +190,10 @@ export default {
   },
   setup() {
     const title = ref("");
+    const appData = useAppDataStore();
     const titleRef = ref("");
     const file = ref();
+    const router = useRouter();
     const description = ref("");
     const descriptionRef = ref("");
     const tab = ref("discover");
@@ -200,6 +205,10 @@ export default {
     const selectedPost = ref(null);
     const selectedPostIndex = ref(null);
     const userData = ref(null)
+    function goToPost (id,post) {
+      appData.currentPost = post;
+      router.push(`/post/${id}`);
+    }
     function deletePost() {
       api.delete("api/posts/" + selectedPost.value.id).then((r) => {
         if (r.data.status) {
@@ -261,6 +270,7 @@ export default {
       descriptionRef,
       fetchPost,
       showConfirmation,
+      goToPost,
       updateCounter,
       taeed,
       selectedPost,
@@ -268,6 +278,7 @@ export default {
       selectedPostIndex,
       editPost,
       fetchAllPost,
+      appData,
       AllPosts,
       fetchUser,
       userData
