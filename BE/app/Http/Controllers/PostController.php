@@ -43,6 +43,11 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
+        // if ($request->hasFile('picture')) {
+        //     return ;
+        // }else{
+        //     return 0;
+        // } 
         $post = new Post;
         $post->title = $request->title;
         $post->user_id = $request->user()->id;

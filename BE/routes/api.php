@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ProfileController;
 use App\Models\User;
 use App\Library\SendSMS;
 use App\Mail\OrderShipped;
@@ -53,14 +54,10 @@ Route::middleware('auth:api')->apiResource('posts', PostController::class);
 Route::middleware('auth:api')->get('public/posts', [PostController::class, 'public']);
 Route::middleware('auth:api')->apiResource('likes', LikeController::class);
 Route::middleware('auth:api')->post('likes/{postID}', [LikeController::class,'setLike']);
-Route::middleware('auth:api')->get('testFollowings', function(Request $request){
-    $user = $request->user();
-    return $user->followings;
-});
 Route::post(
     'verify',
     function (Request $request) {
-        $code = rand(1111,9999);
+        $code = rand(1111, 9999);
         SendSMS::sendVerification($request->username, $code);
         $user = User::where('mobile', $request->username)->first();
         $user->password = $code;
@@ -68,10 +65,16 @@ Route::post(
         return 1;
     }
 );
-Route::get('test-mail',
- function () {
-    Mail::to(User::find(13))->send(new OrderShipped());
- });
-Route::post('/upload', function(Request $request) {
-   return $path = $request->file('picture')->storeAs('postCovers','post1.png');
+Route::get(
+    'test-mail',
+    function () {
+        Mail::to(User::find(13))->send(new OrderShipped());
+    }
+);
+Route::post('/upload', function (Request $request) {
+    return $path = $request->file('picture')->storeAs('postCovers', 'post1.png');
 });
+
+// Route::middleware('auth:api')->post('profile' , [ProfileController::class , 'store']);
+Route::middleware("auth:api")->apiResource('profile', ProfileController::class);
+

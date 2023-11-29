@@ -45,7 +45,7 @@ export default {
     const password = ref(null);
     const usernameRef = ref();
     const passwordRef = ref();
-    const clientSecret = ref("gd9D3h8j2o2MYspgYHPPDIWjywO7yUkJYxwNnq41");
+    const clientSecret = ref("0xX1CkSYUbEKCBIscu3P3ETkZeDc3MpXMzNDV3A4");
     const clientId = ref(2);
     const router = useRouter()
     function login() {
